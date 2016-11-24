@@ -1,0 +1,3 @@
+config BR2_PACKAGE_PHP_UI
+	bool "php-ui"
+	depends on BR2_PACKAGE_LIBUI

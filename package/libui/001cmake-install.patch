@@ -1,0 +1,30 @@
+From 678d3fd6bc6afcb4a547f6f507acf6ff93d2af27 Mon Sep 17 00:00:00 2001
+From: Joe Watkins <krakjoe@php.net>
+Date: Fri, 4 Nov 2016 16:32:42 +0000
+Subject: [PATCH] CMake install rule
+
+---
+ CMakeLists.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eb1696d..8560a5e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -217,3 +217,15 @@ macro(_add_exec _name)
+ endmacro()
+ add_subdirectory("test")
+ add_subdirectory("examples")
++
++install(TARGETS ${_LIBUINAME}
++   LIBRARY DESTINATION lib
++   ARCHIVE DESTINATION lib)
++install(FILES ui.h uitable.h DESTINATION include)
++if (APPLE)
++	install(FILES ui_darwin.h DESTINATION include)
++elseif (WIN32)
++	install(FILES ui_windows.h DESTINATION include)
++else()
++	install(FILES ui_unix.h DESTINATION include)
++endif()
+

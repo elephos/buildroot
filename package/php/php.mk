@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PHP_VERSION = 7.0.9
+PHP_VERSION = 7.0.13
 PHP_SITE = http://www.php.net/distributions
 PHP_SOURCE = php-$(PHP_VERSION).tar.xz
 PHP_INSTALL_STAGING = YES
@@ -19,6 +19,7 @@ PHP_CONF_OPTS = \
 	--disable-all \
 	--without-pear \
 	--with-config-file-path=/etc \
+    --with-config-file-scan-dir=/etc/php.d \
 	--disable-rpath
 PHP_CONF_ENV = \
 	ac_cv_func_strcasestr=yes \
@@ -54,6 +55,10 @@ endif
 PHP_CONFIG_SCRIPTS = php-config
 
 PHP_CFLAGS = $(TARGET_CFLAGS)
+
+ifeq ($(BR2_PACKAGE_PHP_ZTS),y)
+PHP_CONF_OPTS += --enable-maintainer-zts
+endif
 
 # The OPcache extension isn't cross-compile friendly
 # Throw some defines here to avoid patching heavily
@@ -181,8 +186,7 @@ endif
 
 ### Native SQL extensions
 ifeq ($(BR2_PACKAGE_PHP_EXT_MYSQLI),y)
-PHP_CONF_OPTS += --with-mysqli=$(STAGING_DIR)/usr/bin/mysql_config
-PHP_DEPENDENCIES += mysql
+PHP_CONF_OPTS += --with-mysqli=mysqlnd
 endif
 ifeq ($(BR2_PACKAGE_PHP_EXT_SQLITE),y)
 PHP_CONF_OPTS += --with-sqlite3=$(STAGING_DIR)/usr
@@ -199,8 +203,7 @@ PHP_DEPENDENCIES += sqlite
 PHP_CFLAGS += -DSQLITE_OMIT_LOAD_EXTENSION
 endif
 ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_MYSQL),y)
-PHP_CONF_OPTS += --with-pdo-mysql=$(STAGING_DIR)/usr
-PHP_DEPENDENCIES += mysql
+PHP_CONF_OPTS += --with-pdo-mysql=mysqlnd
 endif
 ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_POSTGRESQL),y)
 PHP_CONF_OPTS += --with-pdo-pgsql=$(STAGING_DIR)/usr
@@ -322,9 +325,9 @@ define PHP_INSTALL_FIXUP
 		$(TARGET_DIR)/etc/php.ini
 	$(SED) 's%;date.timezone =.*%date.timezone = $(PHP_LOCALTIME)%' \
 		$(TARGET_DIR)/etc/php.ini
+	[ -d $(TARGET_DIR)/etc/php.d ] || mkdir $(TARGET_DIR)/etc/php.d
 	$(if $(BR2_PACKAGE_PHP_EXT_OPCACHE),
-		$(SED) '/;extension=php_xsl.dll/azend_extension=opcache.so' \
-		$(TARGET_DIR)/etc/php.ini)
+		echo "zend_extension=opcache.so" > $(TARGET_DIR)/etc/php.d/opcache.ini)
 endef
 
 PHP_POST_INSTALL_TARGET_HOOKS += PHP_INSTALL_FIXUP

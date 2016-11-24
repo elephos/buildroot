@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PHP_PTHREADS
+	bool "php-pthreads"
+	depends on BR2_PACKAGE_PHP_ZTS
+	help
+	  Threading API for PHP
+
+	  http://pecl.php.net/package/pthreads
