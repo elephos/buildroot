@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LINUX_FIRMWARE_VERSION = b0668886def608d352cd0263a7ef04e64e25574a
+LINUX_FIRMWARE_VERSION = 87941021a622c882b1921df85d6115940a4e568a
 LINUX_FIRMWARE_SITE = http://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
 LINUX_FIRMWARE_SITE_METHOD = git
 
@@ -373,6 +373,7 @@ LINUX_FIRMWARE_FILES += \
 	brcm/brcmfmac43236b.bin brcm/brcmfmac43241b0-sdio.bin \
 	brcm/brcmfmac43241b4-sdio.bin brcm/brcmfmac43241b5-sdio.bin \
 	brcm/brcmfmac43242a.bin brcm/brcmfmac43340-sdio.bin \
+	brcm/brcmfmac43430-sdio.bin \
 	brcm/brcmfmac43362-sdio.bin brcm/brcmfmac43455-sdio.bin \
 	brcm/brcmfmac43569.bin brcm/brcmfmac43570-pcie.bin \
 	brcm/brcmfmac43602-pcie.ap.bin brcm/brcmfmac43602-pcie.bin
@@ -420,5 +421,11 @@ define LINUX_FIRMWARE_INSTALL_TARGET_CMDS
 	$(LINUX_FIRMWARE_INSTALL_FILES)
 	$(LINUX_FIRMWARE_INSTALL_DIRS)
 endef
+
+ifeq ($(BR2_PACKAGE_LINUX_FIRMWARE_BRCM_BCM43XXX),y)
+	LINUX_FIRMWARE_INSTALL_TARGET_CMDS += \
+		$(WGET) https://raw.githubusercontent.com/RPi-Distro/firmware-nonfree/master/brcm80211/brcm/brcmfmac43430-sdio.txt \
+			-O $(TARGET_DIR)/lib/firmware/brcm/brcmfmac43430-sdio.txt
+endif
 
 $(eval $(generic-package))
