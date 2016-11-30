@@ -1,0 +1,4 @@
+config BR2_PACKAGE_PHP_UV
+	bool "php-uv"
+	depends on BR2_PACKAGE_LIBUV
+	depends on BR2_PACKAGE_PHP

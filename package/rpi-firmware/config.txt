@@ -13,8 +13,7 @@ kernel=zImage
 # If the text shown on the screen disappears off the edge, comment this out
 disable_overscan=1
 
-# How much memory in MB to assign to the GPU on Pi models having
-# 256, 512 or 1024 MB total memory
-gpu_mem_256=100
-gpu_mem_512=100
-gpu_mem_1024=100
+dtoverlay=vc4-kms-v3d
+
+cma_lwm=64
+cma_hwm=128

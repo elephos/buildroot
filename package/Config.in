@@ -1,5 +1,14 @@
-menu "Target packages"
+menu "elephos Configuration"
+	config BR2_ELEPHOS_VERSION
+	string "elephos Version"
+	default 2016.11
+	
+	config BR2_ELEPHOS_VERSION_FULL
+	string "elephos Full Version"
+	default 2016.11alpha
+endmenu
 
+menu "Target packages"
 	source "package/busybox/Config.in"
 	source "package/skeleton/Config.in"
 
@@ -281,6 +290,7 @@ comment "QT libraries and helper libraries"
 	source "package/qwt/Config.in"
 endif
 	source "package/tekui/Config.in"
+	source "package/bluefish/Config.in"
 	source "package/weston/Config.in"
 	source "package/x11r7/Config.in"
 
@@ -625,6 +635,7 @@ menu "External php extensions"
 	source "package/php-pthreads/Config.in"
 	source "package/php-ssh2/Config.in"
 	source "package/php-ui/Config.in"
+	source "package/php-uv/Config.in"
 	source "package/php-yaml/Config.in"
 	source "package/php-zmq/Config.in"
 endmenu

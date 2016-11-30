@@ -1,0 +1,4 @@
+config BR2_PACKAGE_BLUEFISH
+	bool "bluefish"
+	depends on BR2_PACKAGE_LIBGTK3
+

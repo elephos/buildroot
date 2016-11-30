@@ -1,121 +1,57 @@
-Buildroot for Raspberry Pi
-==========================
+elephos
+======
 
-This buildroot *overlay* will produce a bleeding-edge, light-weight and trimmed
-down toolchain, rootfs and kernel for the Raspberry Pi. It's intended for
-**advanced users** and specific embedded applications.
+elephos is a modified version of rpi-buildroot that generates a bleeding edge iot linux image for RPI2 and RPI3.
 
-Before You Begin
-----------------
+elephos comes bundled with hardly anything, among the most useful are:
 
-- If you're not familiar with Buildroot and what it can and can't do, please
-  take the time to [read the manual](http://buildroot.org/downloads/manual/manual.html).
+  * systemd
+  * dbus
+  * GTK3
+  * Wayland
+  * Broadway
+  * DirectFB
+  * PHP7
+  * Weston
 
-- You must be pretty comfortable with **cross-compilation** in order to use
-  rpi-buildroot.
+It produces a tiny image (~250mb), which is ready to boot into a skinny desktop that looks like:
 
-Test Drive
-----------
+PUT IMAGE HERE
 
-You can test drive rpi-buildroot by following the instructions below:
+building
+=======
 
-	wget http://dl.guillermoamaral.com/rpi/sdcard.img.xz
-	xz -d sdcard.img.xz
-	sudo dd if=sdcard.img of=/dev/sdx # replace *sdx* with your actual sdcard device node
+If you have several hours to waste and would like to build yourself:
 
-There's now also a test drive image for the Raspberry Pi 2:
+    make rpi2
+    make
 
-	wget http://dl.guillermoamaral.com/rpi/sdcard2.img.xz
-	xz -d sdcard2.img.xz
-	sudo dd if=sdcard2.img of=/dev/sdx # replace *sdx* with your actual sdcard device node
+*Note: do not use -j switch for make; suitable number of jobs are started by buildroot automatically.*
 
-The default user is **root**, no password is required.
+This will yield ```output/images/sdcard.img``` which can be copied with ``dd``.
 
-Building
---------
+    dd if=output/images/sdcard.img of=/dev/sdX bs=4M
 
-	git clone --depth 1 git://github.com/gamaral/rpi-buildroot.git
-	cd rpi-buildroot
-	make raspberrypi_defconfig # if your target is a Raspberry Pi 2, use 'raspberrypi2_defconfig'
-	make nconfig         # if you want to add packages or fiddle around with it
-	make                 # build (NOTICE: Don't use the **-j** switch, it's set to auto-detect)
+Alternatively, executing ```board/raspberrypi/mksdcard /dev/sdX``` with the appropriate block device will perform repartition, format, and copy.
 
-Deploying
----------
+messing
+======
 
-### Script
+If you would like to add additional packages to your image:
 
-I've added a script that can automatically flash your sdcard, you simply need
-to point it to the correct device node, confirm and you're done!
+    make rpi2
+	make menuconfig
+	/* hack hack hack */
+	make
 
-**Notice** you will need to replace *sdx* in the following commands with the
-actual device node for your sdcard.
+*Note: menuconfig can be replaced by nconfig, or qconfig for different ui*
 
-    # run the following as root (sudo)
-    board/raspberrypi/mksdcard /dev/sdx
+merging
+======
 
-### Manual
+If you have made changes that would benefit everbody, please make a pull request.
 
-You will need to create two partitions in your sdcard, the first (boot) needs
-to be a small *W95 FAT16 (LBA)* patition (that's partition id **e**), about 32
-MB will do.
+credits
+======
 
-**Notice** you will need to replace *sdx* in the following commands with the
-actual device node for your sdcard.
-
-Create the partitions on the SD card. Run the following as root.
-**Notice** all data on the SD card will be lost.
-
-	fdisk /dev/sdx
-	> p             # prints partition table
-	> d             # repeat until all partitions are deleted
-	> n             # create a new partition
-	> p             # create primary
-	> 1             # make it the first partition
-	> <enter>       # use the default sector
-	> +32M          # create a boot partition with 32MB of space
-	> n             # create rootfs partition
-	> p
-	> 2
-	> <enter>
-	> <enter>       # fill the remaining disk, adjust size to fit your needs
-	> t             # change partition type
-	> 1             # select first partition
-	> e             # use type 'e' (FAT16)
-	> a             # make partition bootable
-	> 1             # select first partition
-	> p             # double check everything looks right
-	> w             # write partition table to disk.
-
-Now format the boot partition as FAT 16
-
-	# run the following as root
-	mkfs.vfat -F16 -n BOOT /dev/sdx1
-	mkdir -p /media/boot
-	mount /dev/sdx1 /media/boot
-
-You will need to copy all the files in *output/images/boot* to your *boot*
-partition.
-
-	# run the following as root
-	cp output/images/rpi-firmware/bootcode.bin /media/boot
-	cp output/images/rpi-firmware/fixup.dat /media/boot
-	cp output/images/rpi-firmware/start.elf /media/boot
-	cp output/images/zImage /media/boot/kernel.img
-	cp output/images/*.dtb /media/boot
-	umount /media/boot
-
-The second (rootfs) can be as big as you want, but with a 200 MB minimum,
-and formated as *ext4*.
-
-	# run the following as root
-	mkfs.ext4 -L rootfs /dev/sdx2
-	mkdir -p /media/rootfs
-	mount /dev/sdx2 /media/rootfs
-
-You will need to extract *output/images/rootfs.tar* onto the partition, as **root**.
-
-	# run the following as root
-	tar -xvpsf output/images/rootfs.tar -C /media/rootfs # replace with your mount directory
-	umount /media/rootfs
-
+As already mentioned, this is a modified version of rpi-buildroot, which itself is a modified version of buildroot.

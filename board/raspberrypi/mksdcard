@@ -163,9 +163,12 @@ section "Populating boot partition..."
 ${MOUNT} "${SDCARDP}1" .mnt || exit 2
 
 ${CP} ${OUTPUT_PREFIX}images/rpi-firmware/bootcode.bin .mnt
+${CP} ${OUTPUT_PREFIX}images/rpi-firmware/config.txt .mnt
+${CP} ${OUTPUT_PREFIX}images/rpi-firmware/cmdline.txt .mnt
 ${CP} ${OUTPUT_PREFIX}images/rpi-firmware/fixup.dat .mnt
 ${CP} ${OUTPUT_PREFIX}images/rpi-firmware/start.elf .mnt
 ${CP} ${OUTPUT_PREFIX}images/zImage .mnt/kernel.img
+${CP} -r ${OUTPUT_PREFIX}images/rpi-firmware/overlays .mnt
 ${CP} ${OUTPUT_PREFIX}images/*.dtb .mnt
 ${SYNC}
 ${UMOUNT} .mnt
