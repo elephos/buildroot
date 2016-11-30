@@ -23,7 +23,7 @@ building
 
 If you have several hours to waste and would like to build yourself:
 
-    make rpi2
+    make rpi2_defconfig
     make
 
 *Note: do not use -j switch for make; suitable number of jobs are started by buildroot automatically.*
@@ -39,7 +39,7 @@ messing
 
 If you would like to add additional packages to your image:
 
-    make rpi2
+    make rpi2_defconfig
 	make menuconfig
 	/* hack hack hack */
 	make
