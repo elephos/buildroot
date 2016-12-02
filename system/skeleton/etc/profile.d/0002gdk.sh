@@ -1,4 +1,6 @@
-[ -d /run/xdg ] ||
-	mkdir /run/xdg && chmod 700 /run/xdg
+if [ ! -d $HOME/.xdg ]; then
+	mkdir $HOME/.xdg
+	chmod 700 $HOME/.xdg
+fi
 
-export XDG_RUNTIME_DIR=/run/xdg
+export XDG_RUNTIME_DIR=$HOME/.xdg

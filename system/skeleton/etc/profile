@@ -1,4 +1,3 @@
-export HOME=/root
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
 if [ "`id -u`" -eq 0 ]; then
@@ -8,7 +7,7 @@ else
 fi
 
 export PAGER='/bin/more '
-export EDITOR='/bin/vi'
+export EDITOR='/bin/nano'
 
 # Source configuration files from /etc/profile.d
 for i in /etc/profile.d/*.sh ; do
