@@ -31,7 +31,7 @@ ConditionPathExists=/dev/tty0
 
 [Service]
 # the VT is cleared by TTYVTDisallocate
-ExecStart=-/sbin/getty -l/usr/bin/weston-launch -n -i -L %I "115200" vt100
+ExecStart=-/sbin/agetty --autologin elephos -n -i -L %I "115200" vt100
 Type=idle
 Restart=always
 RestartSec=0
