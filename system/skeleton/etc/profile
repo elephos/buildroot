@@ -7,7 +7,6 @@ else
 fi
 
 export PAGER='/bin/more '
-export EDITOR='/bin/nano'
 
 # Source configuration files from /etc/profile.d
 for i in /etc/profile.d/*.sh ; do
