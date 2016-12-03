@@ -1,11 +1,11 @@
 menu "elephos Configuration"
 	config BR2_ELEPHOS_VERSION
 	string "elephos Version"
-	default 2016.11
+	default 2016.12.1
 	
 	config BR2_ELEPHOS_VERSION_FULL
 	string "elephos Full Version"
-	default 2016.11alpha
+	default 2016.12.1alpha
 endmenu
 
 menu "Target packages"
