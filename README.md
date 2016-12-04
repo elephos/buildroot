@@ -16,7 +16,7 @@ elephos comes bundled with hardly anything, among the most useful are:
 
 It produces a tiny image (~250mb), which is ready to boot into a skinny desktop that looks like:
 
-PUT IMAGE HERE
+[![elephos](http://i.stack.imgur.com/oh909.png)](http://github.com/krakjoe/elephos)
 
 building
 =======
