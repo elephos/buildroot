@@ -1,0 +1,77 @@
+#!/bin/bash
+
+DEV=${1}
+PART=${2}
+
+if [ "x$PART" == "x" ]; then
+	PART=2
+fi
+
+if [ $(whoami) != "root" ]; then
+	echo "You are not super enough ... like me ..."
+	exit 1
+fi
+
+which resize2fs >/dev/null
+
+if [ $? != 0 ]; then
+	echo "resize2fs is missing or stupid ..."
+	exit 2
+fi
+
+which fdisk >/dev/null
+
+if [ $? != 0 ]; then
+	echo "fdisk is missing or stupid ..."
+	exit 3
+fi
+
+which fsck >/dev/null
+
+if [ $? != 0 ]; then
+	echo "fsck is missing or stupid ..."
+	exit 4
+fi
+
+which grep >/dev/null
+
+if [ $? != 0 ]; then
+	echo "grep is missing or stupid ..."
+	exit 5
+fi
+
+if [ ! -b $DEV ]; then
+	echo "${DEV} is not a valid block device ... need a full path to a block device in /dev"
+	exit 6
+fi
+
+MOUNTS=$(grep -F ${DEV}${PART} /proc/mounts)
+
+if [ $? == 0 ]; then
+	echo "${DEV}${PART} looks mounted:"
+	echo $MOUNTS
+	exit 7
+fi
+
+fdisk $DEV >/dev/null <<END
+d
+${PART}
+n
+p
+2
+
+
+w
+END
+
+sync
+
+sleep 3
+
+resize2fs ${DEV}${PART}
+
+ESTATUS=$?
+
+sync
+
+exit $ESTATUS
