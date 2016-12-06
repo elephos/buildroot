@@ -364,10 +364,21 @@ define LINUX_INSTALL_IMAGE
 endef
 endif
 
+define LINUX_INSTALL_OVERLAYS
+	for dtbo in $(KERNEL_ARCH_PATH)/boot/dts/overlays/*overlay.dts; do \
+		overlay=`echo $${dtbo} | \
+			sed 's/-overlay.dts/.dtbo/'`; \
+		ovname=`basename $${overlay}`; \
+		cd $(LINUX_DIR) && scripts/dtc/dtc -I dts -O dtb $${dtbo} -o $(KERNEL_ARCH_PATH)/boot/dts/overlays/$${ovname}; \
+		$(INSTALL) -m 0644 -D $(KERNEL_ARCH_PATH)/boot/dts/overlays/$${ovname} $(1)/$${ovname}; \
+	done
+endef
+
 ifeq ($(BR2_LINUX_KERNEL_INSTALL_TARGET),y)
 define LINUX_INSTALL_KERNEL_IMAGE_TO_TARGET
 	$(call LINUX_INSTALL_IMAGE,$(TARGET_DIR)/boot)
 	$(call LINUX_INSTALL_DTB,$(TARGET_DIR)/boot)
+	$(call LINUX_INSTALL_OVERLAYS, $(TARGET_DIR)/boot/overlays)
 endef
 endif
 
@@ -381,10 +392,10 @@ define LINUX_INSTALL_HOST_TOOLS
 	fi
 endef
 
-
 define LINUX_INSTALL_IMAGES_CMDS
 	$(call LINUX_INSTALL_IMAGE,$(BINARIES_DIR))
-	$(call LINUX_INSTALL_DTB,$(BINARIES_DIR))
+	$(call LINUX_INSTALL_DTB,$(BINARIES_DIR)/boot)
+	$(call LINUX_INSTALL_OVERLAYS,$(BINARIES_DIR)/boot/overlays)
 endef
 
 define LINUX_INSTALL_TARGET_CMDS
@@ -483,12 +494,3 @@ $(LINUX_DIR)/.stamp_initramfs_rebuilt: $(LINUX_DIR)/.stamp_target_installed $(LI
 # The initramfs building code must make sure this target gets called
 # after it generated the initramfs list of files.
 linux-rebuild-with-initramfs: $(LINUX_DIR)/.stamp_initramfs_rebuilt
-
-linux-overlays: $(LINUX_DIR)/.stamp_target_installed
-	for dtbo in ls $(KERNEL_ARCH_PATH)/boot/dts/overlays/*overlay.dts; do \
-		overlay=`echo $${dtbo} | \
-			sed 's/-overlay.dts/.dtbo/'`; \
-		basename=`basename $${overlay}`; \
-		mkdir -p $(BINARIES_DIR)/$(BR2_LINUX_KERNEL_DTS_OVERLAYS_PATH); \
-		cd $(LINUX_DIR) && scripts/dtc/dtc -I dts -O dtb $${dtbo} -o $(BINARIES_DIR)/$(BR2_LINUX_KERNEL_DTS_OVERLAYS_PATH)/$${basename}; \
-	done

@@ -395,10 +395,6 @@ config BR2_LINUX_KERNEL_CUSTOM_DTS_PATH
 	  provide a list of dts paths to copy and build,
 	  separated by spaces.
 
-config BR2_LINUX_KERNEL_DTS_OVERLAYS_PATH
-	string "Device Tree Overlays install path"
-	default "overlays"
-
 endif
 
 config BR2_LINUX_KERNEL_INSTALL_TARGET
