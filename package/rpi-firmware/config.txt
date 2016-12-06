@@ -6,13 +6,16 @@
 
 kernel=zImage
 
+device_tree=bcm2709-rpi-2-b.dtb
+
 # Disable overscan assuming the display supports displaying the full resolution
 # If the text shown on the screen disappears off the edge, comment this out
 disable_overscan=1
 
-dtoverlay=vc4-kms-v3d
+# framebuffer_depth=24
 
-framebuffer_depth=24
+dtoverlay=vc4-kms-v3d.dtbo,cma-192
 
-cma_lwm=64
-cma_hwm=128
+disable_splash=1
+
+avoid_warnings=2
