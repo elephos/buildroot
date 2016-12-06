@@ -483,3 +483,12 @@ $(LINUX_DIR)/.stamp_initramfs_rebuilt: $(LINUX_DIR)/.stamp_target_installed $(LI
 # The initramfs building code must make sure this target gets called
 # after it generated the initramfs list of files.
 linux-rebuild-with-initramfs: $(LINUX_DIR)/.stamp_initramfs_rebuilt
+
+linux-overlays: $(LINUX_DIR)/.stamp_target_installed
+	for dtbo in ls $(KERNEL_ARCH_PATH)/boot/dts/overlays/*overlay.dts; do \
+		overlay=`echo $${dtbo} | \
+			sed 's/-overlay.dts/.dtbo/'`; \
+		basename=`basename $${overlay}`; \
+		mkdir -p $(BINARIES_DIR)/$(BR2_LINUX_KERNEL_DTS_OVERLAYS_PATH); \
+		cd $(LINUX_DIR) && scripts/dtc/dtc -I dts -O dtb $${dtbo} -o $(BINARIES_DIR)/$(BR2_LINUX_KERNEL_DTS_OVERLAYS_PATH)/$${basename}; \
+	done
