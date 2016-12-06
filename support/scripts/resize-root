@@ -40,6 +40,8 @@ if [ $? != 0 ]; then
 	exit 5
 fi
 
+sync
+
 if [ ! -b $DEV ]; then
 	echo "${DEV} is not a valid block device ... need a full path to a block device in /dev"
 	exit 6

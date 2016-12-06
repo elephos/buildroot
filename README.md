@@ -10,7 +10,7 @@ elephos comes bundled with hardly anything, among the most useful are:
   * GTK3
   * Wayland
   * Broadway
-  * DirectFB
+  * mesa3d
   * PHP7
   * Weston
 
@@ -28,11 +28,9 @@ If you have several hours to waste and would like to build yourself:
 
 *Note: do not use -j switch for make; suitable number of jobs are started by buildroot automatically.*
 
-This will yield ```output/images/sdcard.img``` which can be copied with ``dd``.
+This will yield an image in ```output/images``` which can be copied with ``dd``.
 
-    dd if=output/images/sdcard.img of=/dev/sdX bs=4M
-
-Alternatively, executing ```board/raspberrypi/mksdcard /dev/sdX``` with the appropriate block device will perform repartition, format, and copy.
+    dd if=path/to/img of=/dev/sdX bs=4M
 
 messing
 ======
@@ -50,6 +48,18 @@ merging
 ======
 
 If you have made changes that would benefit everbody, please make a pull request.
+
+installing
+=========
+
+To install a released image:
+
+    sudo dd if=path/to/img of=/dev/sdX bs=4M
+	sudo support/scripts/resoze/root /dev/sdX 2
+
+Replace ```/dev/sdX``` with the name of the target device.
+
+*Note: At present rpi2 and rpi3 are different images.*
 
 credits
 ======
