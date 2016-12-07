@@ -68,4 +68,12 @@ config BR2_LINUX_KERNEL_TOOL_DTB_OVERLAYS
 	help
 	  DTB overlays should be built with the kernel
 
+config BR2_LINUX_KERNEL_TOOL_DTC
+	bool "dtc"
+	depends on BR2_arm
+	depends on BR2_LINUX_KERNEL_TOOL_LIBFDT
+	default y
+	help
+		DTC is the device tree compiler
+
 endmenu
