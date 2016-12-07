@@ -364,38 +364,16 @@ define LINUX_INSTALL_IMAGE
 endef
 endif
 
-define LINUX_INSTALL_OVERLAYS
-	for dtbo in $(KERNEL_ARCH_PATH)/boot/dts/overlays/*overlay.dts; do \
-		overlay=`echo $${dtbo} | \
-			sed 's/-overlay.dts/.dtbo/'`; \
-		ovname=`basename $${overlay}`; \
-		cd $(LINUX_DIR) && scripts/dtc/dtc -I dts -O dtb $${dtbo} -o $(KERNEL_ARCH_PATH)/boot/dts/overlays/$${ovname}; \
-		$(INSTALL) -m 0644 -D $(KERNEL_ARCH_PATH)/boot/dts/overlays/$${ovname} $(1)/$${ovname}; \
-	done
-endef
-
 ifeq ($(BR2_LINUX_KERNEL_INSTALL_TARGET),y)
 define LINUX_INSTALL_KERNEL_IMAGE_TO_TARGET
 	$(call LINUX_INSTALL_IMAGE,$(TARGET_DIR)/boot)
 	$(call LINUX_INSTALL_DTB,$(TARGET_DIR)/boot)
-	$(call LINUX_INSTALL_OVERLAYS, $(TARGET_DIR)/boot/overlays)
 endef
 endif
-
-define LINUX_INSTALL_HOST_TOOLS
-	# Installing dtc (device tree compiler) as host tool, if selected
-	if grep -q "CONFIG_DTC=y" $(@D)/.config; then 	\
-		$(INSTALL) -D -m 0755 $(@D)/scripts/dtc/dtc $(HOST_DIR)/usr/bin/linux-dtc ;	\
-		if [ ! -e $(HOST_DIR)/usr/bin/dtc ]; then	\
-			ln -sf linux-dtc $(HOST_DIR)/usr/bin/dtc ;	\
-		fi	\
-	fi
-endef
 
 define LINUX_INSTALL_IMAGES_CMDS
 	$(call LINUX_INSTALL_IMAGE,$(BINARIES_DIR))
 	$(call LINUX_INSTALL_DTB,$(BINARIES_DIR)/boot)
-	$(call LINUX_INSTALL_OVERLAYS,$(BINARIES_DIR)/boot/overlays)
 endef
 
 define LINUX_INSTALL_TARGET_CMDS
@@ -407,7 +385,6 @@ define LINUX_INSTALL_TARGET_CMDS
 		rm -f $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/build ;		\
 		rm -f $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/source ;	\
 	fi
-	$(LINUX_INSTALL_HOST_TOOLS)
 endef
 
 # Include all our extensions and tools definitions.

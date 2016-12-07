@@ -9,6 +9,9 @@ menu "elephos Configuration"
 
 	config BR2_ELEPHOS_RPI_VERSION
 	string "raspberrypi version"
+	
+	source "package/libdtovl/Config.in"
+	source "package/dtoverlay/Config.in"
 endmenu
 
 menu "Target packages"
@@ -1023,7 +1026,6 @@ menu "Hardware handling"
 	source "package/bcm2835/Config.in"
 	source "package/c-periphery/Config.in"
 	source "package/ccid/Config.in"
-	source "package/dtc/Config.in"
 	source "package/gnu-efi/Config.in"
 	source "package/hidapi/Config.in"
 	source "package/lcdapi/Config.in"

@@ -1,0 +1,4 @@
+config BR2_PACKAGE_DTOVERLAY
+	bool "dtoverlay"
+	default y
+	depends on BR2_PACKAGE_LIBFDT
