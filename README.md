@@ -55,7 +55,7 @@ installing
 To install a released image:
 
     sudo dd if=path/to/img of=/dev/sdX bs=4M
-	sudo support/scripts/resoze/root /dev/sdX 2
+	sudo support/scripts/resize-root /dev/sdX 2
 
 Replace ```/dev/sdX``` with the name of the target device.
 
