@@ -1,0 +1,134 @@
+--- a/scripts/dtc/fdtdump.c	2016-12-07 23:12:49.522570566 +0000
++++ b/scripts/dtc/fdtdump.c	2016-12-07 23:20:38.580896491 +0000
+@@ -8,8 +8,7 @@
+ #include <string.h>
+ #include <ctype.h>
+ 
+-#include <fdt.h>
+-#include <libfdt_env.h>
++#include <libfdt.h>
+ 
+ #include "util.h"
+ 
+--- a/scripts/dtc/fdtput.c	2016-12-07 23:30:44.303900109 +0000
++++ b/scripts/dtc/fdtput.c	2016-12-07 23:27:21.886896387 +0000
+@@ -272,7 +272,7 @@
+ 	return ret;
+ }
+ 
+-static const char *usage_msg =
++static const char *fdtput_usage_msg =
+ 	"fdtput - write a property value to a device tree\n"
+ 	"\n"
+ 	"The command line arguments are joined together into a single value.\n"
+@@ -288,12 +288,12 @@
+ 	"\t-h\t\tPrint this help\n\n"
+ 	USAGE_TYPE_MSG;
+ 
+-static void usage(const char *msg)
++static void fdtput_usage(const char *msg)
+ {
+ 	if (msg)
+ 		fprintf(stderr, "Error: %s\n\n", msg);
+ 
+-	fprintf(stderr, "%s", usage_msg);
++	fprintf(stderr, "%s", fdtput_usage_msg);
+ 	exit(2);
+ }
+ 
+@@ -325,14 +325,14 @@
+ 			break;
+ 		case 'h':
+ 		case '?':
+-			usage(NULL);
++			fdtput_usage(NULL);
+ 		case 'p':
+ 			disp.auto_path = 1;
+ 			break;
+ 		case 't':
+ 			if (utilfdt_decode_type(optarg, &disp.type,
+ 					&disp.size))
+-				usage("Invalid type string");
++				fdtput_usage("Invalid type string");
+ 			break;
+ 
+ 		case 'v':
+@@ -344,16 +344,16 @@
+ 	if (optind < argc)
+ 		filename = argv[optind++];
+ 	if (!filename)
+-		usage("Missing filename");
++		fdtput_usage("Missing filename");
+ 
+ 	argv += optind;
+ 	argc -= optind;
+ 
+ 	if (disp.oper == OPER_WRITE_PROP) {
+ 		if (argc < 1)
+-			usage("Missing node");
++			fdtput_usage("Missing node");
+ 		if (argc < 2)
+-			usage("Missing property");
++			fdtput_usage("Missing property");
+ 	}
+ 
+ 	if (do_fdtput(&disp, filename, argv, argc))
+--- a/scripts/dtc/fdtget.c	2016-12-07 23:34:36.405051036 +0000
++++ b/scripts/dtc/fdtget.c	2016-12-07 23:33:07.096608186 +0000
+@@ -277,7 +277,7 @@
+ 	return 0;
+ }
+ 
+-static const char *usage_msg =
++static const char *fdtget_usage_msg =
+ 	"fdtget - read values from device tree\n"
+ 	"\n"
+ 	"Each value is printed on a new line.\n\n"
+@@ -293,12 +293,12 @@
+ 	"\t-h\t\tPrint this help\n\n"
+ 	USAGE_TYPE_MSG;
+ 
+-static void usage(const char *msg)
++static void fdtget_usage(const char *msg)
+ {
+ 	if (msg)
+ 		fprintf(stderr, "Error: %s\n\n", msg);
+ 
+-	fprintf(stderr, "%s", usage_msg);
++	fprintf(stderr, "%s", fdtget_usage_msg);
+ 	exit(2);
+ }
+ 
+@@ -320,12 +320,12 @@
+ 		switch (c) {
+ 		case 'h':
+ 		case '?':
+-			usage(NULL);
++			fdtget_usage(NULL);
+ 
+ 		case 't':
+ 			if (utilfdt_decode_type(optarg, &disp.type,
+ 					&disp.size))
+-				usage("Invalid type string");
++				fdtget_usage("Invalid type string");
+ 			break;
+ 
+ 		case 'p':
+@@ -347,7 +347,7 @@
+ 	if (optind < argc)
+ 		filename = argv[optind++];
+ 	if (!filename)
+-		usage("Missing filename");
++		fdtget_usage("Missing filename");
+ 
+ 	argv += optind;
+ 	argc -= optind;
+@@ -358,7 +358,7 @@
+ 
+ 	/* Check for node, property arguments */
+ 	if (args_per_step == 2 && (argc % 2))
+-		usage("Must have an even number of arguments");
++		fdtget_usage("Must have an even number of arguments");
+ 
+ 	if (do_fdtget(&disp, filename, argv, argc, args_per_step))
+ 		return 1;

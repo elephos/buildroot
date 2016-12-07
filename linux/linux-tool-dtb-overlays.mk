@@ -24,6 +24,7 @@ define DTB_OVERLAYS_BUILD_CMDS
 endef
 
 define DTB_OVERLAYS_INSTALL_TARGET_CMDS
+	$(INSTALL) -D $(DTB_OVERLAYS_SRC)/README $(DTB_OVERLAYS_DST)/README
 	$(Q)for dtbo in $(DTB_OVERLAYS_SRC)/*.dtbo; do \
 		ovname=`basename $${dtbo}`; \
 		$(INSTALL) -m 0644 -D \
