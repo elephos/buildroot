@@ -82,6 +82,7 @@ define DTBO_BUILD_CMDS
 endef
 
 define DTBO_INSTALL_TARGET_CMDS
+	$(Q) $(INSTALL) -d $(DTB_OVERLAYS_DST)/
 	$(Q) $(INSTALL) -D $(DTB_OVERLAYS_SRC)/README $(DTB_OVERLAYS_DST)/README
 	$(Q)for dtbo in $(DTB_OVERLAYS_SRC)/*.dtbo; do \
 		ovname=`basename $${dtbo}`; \
