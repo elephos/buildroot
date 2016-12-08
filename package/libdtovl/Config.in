@@ -1,5 +1,4 @@
 config BR2_PACKAGE_LIBDTOVL
 	bool "libdtovl"
 	default y
-	depends on BR2_LINUX_KERNEL_TOOL_LIBFDT
-	depends on BR2_LINUX_KERNEL
+	depends on BR2_PACKAGE_LIBFDT
