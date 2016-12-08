@@ -4,7 +4,7 @@
 #
 #
 
-DTC_DEPENDENCIES = libfdt
+DTC_DEPENDENCIES = libfdt host-flex host-bison
 DTC_VERSION = $(call qstrip,$(BR2_LINUX_KERNEL_VERSION))
 
 ifeq ($(BR2_LINUX_KERNEL_CUSTOM_TARBALL),y)
@@ -65,19 +65,21 @@ endef
 DTC_POST_PATCH_HOOKS += DTC_APPLY_LOCAL_PATCHES
 
 define DTC_BUILD_CMDS
+	$(FLEX) -o$(@D)/scripts/dtc/dtc-lexer.lex.c $(@D)/scripts/dtc/dtc-lexer.l
+	$(BISON) -d -o$(@D)/scripts/dtc/dtc-parser.tab.c $(@D)/scripts/dtc/dtc-parser.y
 	$(Q)$(TARGET_MAKE_ENV) $(TARGET_CC) $(TARGET_CFLAGS) \
-		-I$(LINUX_DIR)/scripts/dtc -o $(LINUX_DIR)/lib/dtc \
-			$(LINUX_DIR)/scripts/dtc/checks.c \
-			$(LINUX_DIR)/scripts/dtc/data.c \
-			$(LINUX_DIR)/scripts/dtc/fstree.c \
-			$(LINUX_DIR)/scripts/dtc/flattree.c \
-			$(LINUX_DIR)/scripts/dtc/livetree.c \
-			$(LINUX_DIR)/scripts/dtc/srcpos.c \
-			$(LINUX_DIR)/scripts/dtc/treesource.c \
-			$(LINUX_DIR)/scripts/dtc/util.c \
-			$(LINUX_DIR)/scripts/dtc/dtc-lexer.lex.c \
-			$(LINUX_DIR)/scripts/dtc/dtc-parser.tab.c \
-			$(LINUX_DIR)/scripts/dtc/dtc.c \
+		-I$(@D)/scripts/dtc -o $(@D)/dtc \
+			$(@D)/scripts/dtc/checks.c \
+			$(@D)/scripts/dtc/data.c \
+			$(@D)/scripts/dtc/fstree.c \
+			$(@D)/scripts/dtc/flattree.c \
+			$(@D)/scripts/dtc/livetree.c \
+			$(@D)/scripts/dtc/srcpos.c \
+			$(@D)/scripts/dtc/treesource.c \
+			$(@D)/scripts/dtc/util.c \
+			$(@D)/scripts/dtc/dtc-lexer.lex.c \
+			$(@D)/scripts/dtc/dtc-parser.tab.c \
+			$(@D)/scripts/dtc/dtc.c \
 		-I$(STAGING_DIR)/include -L$(STAGING_DIR)/lib -lfdt;
 	$(Q)if [ $${?} -eq 0 ]; then \
 		echo "  BUILD scripts/dtc/dtc.c OK"; \
@@ -87,16 +89,16 @@ define DTC_BUILD_CMDS
 endef
 
 define DTC_INSTALL_TARGET_CMDS
-	$(Q)$(INSTALL) -D $(LINUX_DIR)/lib/dtc $(TARGET_DIR)/bin/dtc
+	$(Q)$(INSTALL) -D $(@D)/dtc $(TARGET_DIR)/bin/dtc
 	$(Q)if [ $${?} -eq 0 ]; then \
 		echo "  INSTALL bin/dtc OK"; \
 	else \
 		echo "  INSTALL bin/dtc FAILED"; \
 	fi
-	@for HEADER in `find $(LINUX_DIR)/include/dt-bindings -type f -printf '%P\n'`; \
+	@for HEADER in `find $(@D)/include/dt-bindings -type f -printf '%P\n'`; \
 	do \
 		$(INSTALL) -D \
-			$(LINUX_DIR)/include/dt-bindings/$${HEADER} \
+			$(@D)/include/dt-bindings/$${HEADER} \
 			$(TARGET_DIR)/usr/share/dt-bindings/$${HEADER}; \
 		if [ $${?} -eq 0 ]; then \
 			echo "  INSTALL share/dt-bindings/$${HEADER} OK"; \
