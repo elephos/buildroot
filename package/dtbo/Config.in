@@ -1,0 +1,5 @@
+config BR2_PACKAGE_DTBO
+	bool "dtbo"
+	depends on BR2_LINUX_KERNEL
+	depends on BR2_arm
+	default y

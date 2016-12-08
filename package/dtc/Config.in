@@ -1,0 +1,4 @@
+config BR2_PACKAGE_DTC
+    bool "dtc"
+	depends on BR2_PACKAGE_LIBFDT
+	default y

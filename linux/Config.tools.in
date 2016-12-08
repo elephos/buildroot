@@ -54,26 +54,4 @@ comment "selftests needs BR2_PACKAGE_BUSYBOX_SHOW_OTHERS"
 	depends on BR2_USE_MMU
 	depends on !BR2_PACKAGE_BUSYBOX_SHOW_OTHERS
 
-config BR2_LINUX_KERNEL_TOOL_LIBFDT
-	bool "libfdt"
-	depends on BR2_arm
-	default y
-	help
-	  DTB tools and overlays should be built with the kernel
-
-config BR2_LINUX_KERNEL_TOOL_DTB_OVERLAYS
-	bool "dtb-overlays"
-	depends on BR2_arm
-	default y
-	help
-	  DTB overlays should be built with the kernel
-
-config BR2_LINUX_KERNEL_TOOL_DTC
-	bool "dtc"
-	depends on BR2_arm
-	depends on BR2_LINUX_KERNEL_TOOL_LIBFDT
-	default y
-	help
-		DTC is the device tree compiler
-
 endmenu

@@ -1,0 +1,4 @@
+config BR2_PACKAGE_LIBFDT
+	bool "libfdt"
+	depends on BR2_LINUX_KERNEL
+	default y

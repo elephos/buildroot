@@ -9,7 +9,10 @@ menu "elephos Configuration"
 
 	config BR2_ELEPHOS_RPI_VERSION
 	string "raspberrypi version"
-	
+
+	source "package/libfdt/Config.in"
+	source "package/dtc/Config.in"
+	source "package/dtbo/Config.in"
 	source "package/libdtovl/Config.in"
 	source "package/dtoverlay/Config.in"
 endmenu
