@@ -44,7 +44,7 @@ ifneq ($(findstring -rc,$(LIBFDT_VERSION)),)
 endif # -rc
 endif
 
-LIBFDT_PATCHES = $(call qstrip,$(BR2_LINUX_KERNEL_PATCH))
+LIBFDT_PATCHES += $(call qstrip,$(BR2_LINUX_KERNEL_PATCH))
 
 # We rely on the generic package infrastructure to download and apply
 # remote patches (downloaded from ftp, http or https). For local
