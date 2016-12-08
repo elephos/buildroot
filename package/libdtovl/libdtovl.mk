@@ -3,7 +3,7 @@
 # libdtovl
 #
 ##################################################
-LIBDTOVL_VERSION = d775b8e9f5a948562a0b564fa43097afba46b2cb
+LIBDTOVL_VERSION = ed9016bfdffa6e88bcc5579a871bba164e251d82
 LIBDTOVL_SITE = $(call github,elephos,libdtovl,$(LIBDTOVL_VERSION))
 LIBDTOVL_INSTALL_STAGING = YES
 LIBDTOVL_INSTALL_TARGET = YES
