@@ -1,11 +1,19 @@
 # /etc/fstab: static file system information.
 #
 # <file system> <mount pt> <type> <options>               <dump> <pass>
-/dev/root       /          ext4   rw,noauto               0      1
+/dev/root       /          squashfs   ro               	  0      1
+/dev/mmcblk0p1	/boot	   vfat   defaults				  0      0
+/dev/mmcblk0p3  /.overlay  ext4   defaults                0      0
 proc            /proc      proc   defaults                0      0
 devpts          /dev/pts   devpts defaults,gid=5,mode=620 0      0
 tmpfs           /dev/shm   tmpfs  mode=0777               0      0
 tmpfs           /tmp       tmpfs  mode=1777               0      0
 tmpfs           /run       tmpfs  mode=0755,nosuid,nodev  0      0
 sysfs           /sys       sysfs  defaults                0      0
-/dev/mmcblk0p1	/boot	   vfat   defaults				  0      0
+
+overlay			/etc	   overlay x-systemd.requires=/.overlay,lowerdir=/etc,upperdir=/.overlay/etc,workdir=/.overlay/.work/etc 0 0
+overlay			/home	   overlay x-systemd.requires=/.overlay,lowerdir=/home,upperdir=/.overlay/home,workdir=/.overlay/.work/home 0 0
+overlay			/opt	   overlay x-systemd.requires=/.overlay,lowerdir=/opt,upperdir=/.overlay/opt,workdir=/.overlay/.work/opt 0 0
+overlay			/root	   overlay x-systemd.requires=/.overlay,lowerdir=/root,upperdir=/.overlay/root,workdir=/.overlay/.work/root 0 0
+overlay			/usr	   overlay x-systemd.requires=/.overlay,lowerdir=/usr,upperdir=/.overlay/usr,workdir=/.overlay/.work/usr 0 0
+overlay			/var	   overlay x-systemd.requires=/.overlay,lowerdir=/var,upperdir=/.overlay/var,workdir=/.overlay/.work/var 0 0

@@ -1,1 +1,1 @@
-console=null root=/dev/mmcblk0p2 rootfstype=ext4 rootwait
+console=none root=/dev/mmcblk0p2 rootfstype=squashfs ro rootwait
