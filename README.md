@@ -75,7 +75,7 @@ FAQ
 How do I make WiFi work ?
 ----------------------
 
-WiFi firmware and drivers for the RPI are installed and ready to use, but to save power and processing they are not enabled by default:
+WiFi firmware and drivers for the RPI are installed and ready to use, but to save power and processing the user space WPA supplicant is not enabled by default:
 
     sudo systemctl enable wpa_supplicant
 	sudo systemctl enable wpa_supplicant@wlan0

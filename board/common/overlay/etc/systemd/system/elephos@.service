@@ -1,12 +1,16 @@
 [Unit]
-Description=elephos
-After=getty.service
+Description=elephos desktop
+After=dbus.service
 
 [Service]
+Type=simple
+Restart=always
+RestartSec=5
 ExecStart=-/usr/bin/weston-launch --user elephos
 WorkingDirectory=/home/elephos
-Type=oneshot
 IgnoreSIGPIPE=no
+TTYPath=/dev/tty1
+TTYVTDisallocate=yes
 
 [Install]
-Alias=multi-user.target.wants/elephos@.service
+Alias=graphical.target.wants/elephos@tty1.service

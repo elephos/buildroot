@@ -20,6 +20,3 @@ rm -f ${TARGET_DIR}/etc/systemd/system/bluetooth.target.wants/bluetooth.service
 find ${TARGET_DIR}/usr/share/weston -name *.svg -delete
 find ${TARGET_DIR}/usr/share/icons -name *.svg -delete
 
-
-
-

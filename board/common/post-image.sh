@@ -6,7 +6,7 @@ GENIMAGE_RPI=rpi${2}
 [ -d ${BINARIES_DIR}/boot/${GENIMAGE_RPI} ] || 		mkdir ${BINARIES_DIR}/boot/${GENIMAGE_RPI}
 
 # Mark the kernel as DT-enabled
-${HOST_DIR}/usr/bin/mkknlimg \
+${HOST_DIR}/usr/bin/mkknlimg --dtok --ddtk \
 	"${BINARIES_DIR}/zImage" \
 	"${BINARIES_DIR}/boot/zImage"
 
