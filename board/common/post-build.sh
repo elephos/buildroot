@@ -13,7 +13,6 @@ rm -rf ${TARGET_DIR}/etc/systemd/system/getty.target.wants
 ###########################################################
 rm -f ${TARGET_DIR}/etc/systemd/system/bluetooth.target.wants/bluetooth.service
 
-
 ###########################################################
 # Currently weston is not able to use scalable graphics
 ###########################################################

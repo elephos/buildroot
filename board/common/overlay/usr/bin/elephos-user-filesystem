@@ -1,0 +1,111 @@
+#!/usr/bin/php
+<?php
+function eufs_configure(array $argv, string $file) : array {
+	$cmdline = [
+		"action" => $argv[1] ?: "mount",
+		"size" => 32,
+	];
+
+	if (preg_match_all("~eufs\.([a-z]+)=([^ ]+)~", file_get_contents($file), $cfg)) {
+		foreach ($cfg[1] as $idx => $name) {
+			$cmdline[$name] = $cfg[2][$idx];
+		} 
+	}
+	return $cmdline;
+}
+
+function eufs_mount(array $config) : bool {
+	if ($config["disk"] == "zram") {
+eufs_mount_zram:
+		passthru("modprobe zram num_devices=1", $status);
+
+		if ($status == 0) {
+			file_put_contents(
+				"/sys/block/zram0/disksize", 
+				$config["size"] * 1024 * 1024);
+
+			passthru("mkfs.ext2 /dev/zram0", $status);
+
+			if ($status == 0) {
+				passthru("mount /dev/zram0 /.overlay", $status);
+
+				if ($status == 0) {
+					return true;
+				}
+			}
+
+			passthru("rmmod zram");
+		}
+		return false;
+	}
+
+	if (!file_exists($config["disk"])) {
+		goto eufs_mount_zram;
+	}
+
+	passthru("mount {$config["disk"]} /.overlay", $status);
+
+	if ($status != 0) {
+		goto eufs_mount_zram;
+	}
+
+	return true;
+}
+
+function eufs_unmount(array $config) {
+	foreach ([
+		"etc",
+		"home",
+		"opt",
+		"root",
+		"usr",
+		"var"
+	] as $overlay) {
+		passthru("umount /{$overlay}");
+	}
+
+	passthru("umount /.overlay");
+}
+
+function eufs_main(array $config) {
+	if ($config["action"] == "mount") {
+		if (!eufs_mount($config)) {
+			throw new RuntimeException("failed to mount eufs on {$config["disk"]}");
+		}
+
+		if (!is_dir("/.overlay/.work")) {
+			if (!mkdir("/.overlay/.work")) {
+				throw new RuntimeException("/.overlay/.work does not exist and cannot be created");
+			}
+		}
+
+		foreach ([
+			"etc",
+			"home",
+			"opt",
+			"root",
+			"usr",
+			"var"
+		] as $overlay) {
+			if (!is_dir("/.overlay/{$overlay}")) {
+				if (!mkdir("/.overlay/{$overlay}")) {
+					throw new RuntimeException("/.overlay/{$overlay} does not exist and could not be created");
+				}
+			}
+
+			if (!is_dir("/.overlay/.work/{$overlay}")) {
+				if (!mkdir("/.overlay/.work/{$overlay}")) {
+					throw new RuntimeException("/.overlay/.work/{$overlay} does not exist and could not be created");
+				}
+			}
+
+			passthru("mount -t overlay overlay -olowerdir=/{$overlay},upperdir=/.overlay/{$overlay},workdir=/.overlay/.work/{$overlay} /{$overlay}");
+		}
+	} else if ($config["action"] == "unmount") {
+		eufs_unmount($config);
+	}
+}
+
+eufs_main(
+	eufs_configure(
+		$argv, "/proc/cmdline"));

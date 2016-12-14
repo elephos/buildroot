@@ -7,6 +7,8 @@ elephos comes bundled with hardly anything, among the most useful are:
 
   * systemd
   * dbus
+  * sshd
+  * NetworkManager
   * GTK3
   * Wayland
   * Broadway
@@ -14,7 +16,7 @@ elephos comes bundled with hardly anything, among the most useful are:
   * PHP7
   * Weston
 
-It produces a tiny image (~150mb), which is ready to boot into a skinny desktop that looks like:
+It produces a *tiny* image, which is ready to boot into a skinny desktop that looks like:
 
 [![elephos](http://i.stack.imgur.com/oh909.png)](http://github.com/krakjoe/elephos)
 
@@ -54,20 +56,45 @@ installing
 
 To install a released image:
 
-    sudo dd if=path/to/img of=/dev/sdX bs=4M
+    sudo dd if=path/to/img of=/dev/sdX bs=4M && sudo sync
 
-At this point you have a usable system, and could boot the device (after sync). However, there is only a small amount of persistent storage available. 
+At this point you have a non-persistent system: If you boot the device, changes you make will not be saved.
 
-To resize the persistent (user) storage partition:
+persisting
+=========
 
-	sudo support/scripts/resize-user /dev/sdX [size]
+For a persistent installation, elephos requires a formatted partition: To use a partition on the same media as the rootfs:
 
-Replace ```/dev/sdX``` with the name of the target device, **do not include the partition number**.
+    fdisk /dev/sdX
 
-Size should be in the form ```+1G``` for ```1GB```, the value is passed to ```fdisk``` as partition boundaries. If no size is given, the maximum space is used.
+To create a 1GB partition copy/paste:
 
-*Note: At present rpi2 and rpi3 are different images.*
+	n
+	p
+	3
+	
+	+1G
+	w
 
+Then format the partition:
+
+	mkfs.ext2 /dev/sdX3
+
+Then mount the boot partition on the installation media, open ```cmdline.txt``` and change:
+
+	eufs.disk=zram
+
+To:
+
+	eufs.disk=/dev/sdX3
+
+You may also remove:
+
+	eufs.size=32
+
+As this only relates to zram disks.
+
+*Note: remember to unmount the boot partition gracefully!*
 
 FAQ
 ===
