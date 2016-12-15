@@ -102,26 +102,16 @@ FAQ
 How do I make WiFi work ?
 ----------------------
 
-WiFi firmware and drivers for the RPI are installed and ready to use, but to save power and processing the user space WPA supplicant is not enabled by default:
-
-    sudo systemctl enable wpa_supplicant
-	sudo systemctl enable wpa_supplicant@wlan0
-    sudo systemctl start wpa_supplicant
-	sudo systemctl start wpa_supplicant@wlan0
-
-At this point, WiFi should be ready to go, ```wps_cli``` and ```wpa_passphrase``` are installed to confgure connections.
+```NetworkManager``` and ```WPA``` utils are installed to configure wifi, start with ```nmcli```.
 
 How do I make bluetooth work ?
 ---------------------------
 
-Bluetooth firmware and drivers for the RPI are installed and ready to use, but to save power and processing they are not enabled by default:
+Bluetooth is not enabled by default, and needs to be started manually:
 
-	sudo systemctl enable brcmfw
-	sudo systemctl enable bluetooth
-	sudo systemctl start brcmfw
-	sudo systemctl start bluetooth
+    sudo systemctl start bluetooth.target
 
-The ```bluetoothctl``` tool is installed to configure the device.
+Various ```HCI``` tools and ```bluetoothctl``` (bluez5) are installed.
 
 credits
 ======
