@@ -1,7 +1,9 @@
 [Unit]
 Description=User Filesystem
-Before=systemd-tmpfiles-setup.service
-After=systemd-udev-trigger.service
+DefaultDependencies=false
+After=swap.target
+Before=local-fs.target
+Before=remote-fs.target
 
 [Service]
 Type=oneshot
@@ -9,4 +11,4 @@ ExecStart=/usr/bin/elephos-user-filesystem mount
 ExecStop=/usr/bin/elephos-user-filesystem umount
 
 [Install]
-Alias=sysinit.target.wants/elephos.user.service
+Alias=local-fs.target.wants/elephos.user.service

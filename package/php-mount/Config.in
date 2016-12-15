@@ -1,0 +1,3 @@
+config BR2_PACKAGE_PHP_MOUNT
+	bool "php-mount"
+	default y

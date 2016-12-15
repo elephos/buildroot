@@ -27,9 +27,7 @@ eufs_mount_zram:
 			passthru("mkfs.ext2 /dev/zram0", $status);
 
 			if ($status == 0) {
-				passthru("mount /dev/zram0 /.overlay", $status);
-
-				if ($status == 0) {
+				if (elephos\mount("/dev/zram0", "/.overlay", "ext2")) {
 					return true;
 				}
 			}
@@ -43,9 +41,7 @@ eufs_mount_zram:
 		goto eufs_mount_zram;
 	}
 
-	passthru("mount {$config["disk"]} /.overlay", $status);
-
-	if ($status != 0) {
+	if (!elephos\mount($config["disk"], "/.overlay", "ext2")) {
 		goto eufs_mount_zram;
 	}
 
@@ -61,10 +57,10 @@ function eufs_unmount(array $config) {
 		"usr",
 		"var"
 	] as $overlay) {
-		passthru("umount /{$overlay}");
+		elephos\umount("/${overlay}");
 	}
 
-	passthru("umount /.overlay");
+	elephos\umount("/.overlay");
 }
 
 function eufs_main(array $config) {
@@ -99,8 +95,9 @@ function eufs_main(array $config) {
 				}
 			}
 
-			passthru("mount -t overlay overlay -olowerdir=/{$overlay},upperdir=/.overlay/{$overlay},workdir=/.overlay/.work/{$overlay} /{$overlay}");
+			elephos\mount("overlay", "/{$overlay}", "overlay", 0, "lowerdir=/{$overlay},upperdir=/.overlay/{$overlay},workdir=/.overlay/.work/{$overlay}");
 		}
+
 	} else if ($config["action"] == "unmount") {
 		eufs_unmount($config);
 	}

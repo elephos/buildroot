@@ -1,11 +1,11 @@
 menu "elephos Configuration"
 	config BR2_ELEPHOS_VERSION
 	string "elephos Version"
-	default 2016.12.3
+	default 2016.12.4
 	
 	config BR2_ELEPHOS_VERSION_FULL
 	string "elephos Full Version"
-	default 2016.12.3alpha
+	default 2016.12.4alpha
 
 	config BR2_ELEPHOS_RPI_VERSION
 	string "raspberrypi version"
@@ -642,6 +642,7 @@ menu "External php extensions"
 	source "package/php-imagick/Config.in"
 	source "package/php-memcached/Config.in"
 	source "package/php-pthreads/Config.in"
+	source "package/php-mount/Config.in"
 	source "package/php-ssh2/Config.in"
 	source "package/php-ui/Config.in"
 	source "package/php-uv/Config.in"
