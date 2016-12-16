@@ -1,11 +1,11 @@
 menu "elephos Configuration"
 	config BR2_ELEPHOS_VERSION
 	string "elephos Version"
-	default 2016.12.4
+	default 2016.12.5
 	
 	config BR2_ELEPHOS_VERSION_FULL
 	string "elephos Full Version"
-	default 2016.12.4alpha
+	default 2016.12.5alpha
 
 	config BR2_ELEPHOS_RPI_VERSION
 	string "raspberrypi version"
